@@ -37,6 +37,11 @@ class FlowerController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|min:3|max:30',
+            'price' => 'required|numeric|between:2,100',
+        ]);
+
         $res = DB::insert('INSERT INTO flowers(name, price) VALUES(?, ?)', [$request->name, $request->price]);
 
         if ($res)
@@ -78,6 +83,11 @@ class FlowerController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|min:3|max:30',
+            'price' => 'required|numeric|between:2,100',
+        ]);
+
         $res = DB::update('UPDATE flowers 
         SET name = ?, price = ?
         WHERE id = ?', [$request->name, $request->price, $id]);
