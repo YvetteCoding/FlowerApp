@@ -19,12 +19,12 @@ Route::get('/', function () {
 });
 
 Route::get('/flowers', [FlowerController::class, 'index']);
+Route::get('/flowers/details/{id}', [FlowerController::class, 'show']);
 // Insert :
 Route::get('/flowers/insert', [FlowerController::class, 'create']);
 Route::post('/flowers/insert', [FlowerController::class, 'store']);
 
 // Update : 
-
 Route::get('/flowers/update/{id}', [FlowerController::class, 'edit']);
 Route::put('/flowers/update/{id}', [FlowerController::class, 'update']);
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Flower;
 
 class FlowerController extends Controller
 {
@@ -14,7 +14,7 @@ class FlowerController extends Controller
      */
     public function index()
     {
-        $flowers = DB::table('flowers')->get();
+        $flowers = Flower::all();
 
         return view('flowers', ['flowers' => $flowers]);
     }
@@ -42,9 +42,13 @@ class FlowerController extends Controller
             'price' => 'required|numeric|between:2,100',
         ]);
 
-        $res = DB::insert('INSERT INTO flowers(name, price) VALUES(?, ?)', [$request->name, $request->price]);
+        // Create a Flower object
+        $flower = new Flower;
+        $flower->name = $request->name;
+        $flower->price = $request->price;
 
-        if ($res)
+        // Save it in the DB and check if it worked
+        if ($flower->save())
             return redirect('flowers')->with('success', 'Insert successfully');
         else
             return 'Problem inserting';
@@ -58,7 +62,9 @@ class FlowerController extends Controller
      */
     public function show($id)
     {
-        //
+        $flower = Flower::find($id);
+
+        return view('flower-details', ['f' => $flower]);
     }
 
     /**
@@ -69,7 +75,7 @@ class FlowerController extends Controller
      */
     public function edit($id)
     {
-        $flower = DB::table('flowers')->where('id', $id)->first();
+        $flower = Flower::find($id);
 
         return view('update-flower', ['flower' => $flower]);
     }
@@ -88,11 +94,13 @@ class FlowerController extends Controller
             'price' => 'required|numeric|between:2,100',
         ]);
 
-        $res = DB::update('UPDATE flowers 
-        SET name = ?, price = ?
-        WHERE id = ?', [$request->name, $request->price, $id]);
+        // Create a Flower object
+        $flower = Flower::find($id);
+        $flower->name = $request->name;
+        $flower->price = $request->price;
 
-        if ($res)
+        // Save it in the DB and check if it worked
+        if ($flower->save())
             return 'Updated successfully';
         else
             return 'Problem updating';
@@ -106,7 +114,7 @@ class FlowerController extends Controller
      */
     public function destroy($id)
     {
-        $res = DB::table('flowers')->where('id', $id)->delete();
+        $res = Flower::destroy($id);
 
         if ($res) {
             return back()->with('success', 'Flower was delete');
