@@ -27,6 +27,16 @@
             <li>
                 <a href="{{ url('/contact') }}">Contact</a>
             </li>
+
+            @if (!session()->exists('email'))
+                <li>
+                    <a href="{{ url('/login') }}">Login</a>
+                </li>
+            @else
+                <li>
+                    <a href="{{ url('/logout') }}">Logout</a>
+                </li>
+            @endif
         </ul>
     </nav>
     <div class="content">
