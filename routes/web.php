@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FlowerController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,11 @@ Route::get('/flowers/update/{id}', [FlowerController::class, 'edit']);
 Route::put('/flowers/update/{id}', [FlowerController::class, 'update']);
 
 Route::get('/flowers/delete/{id}', [FlowerController::class, 'destroy']);
+
+// Display all comments
+Route::get('/comments', [CommentController::class, 'index']);
+
+
+Route::get('/contact', function () {
+    return view('contact');
+});

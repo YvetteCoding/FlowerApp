@@ -63,7 +63,6 @@ class FlowerController extends Controller
     public function show($id)
     {
         $flower = Flower::find($id);
-
         return view('flower-details', ['f' => $flower]);
     }
 
