@@ -121,4 +121,28 @@ class FlowerController extends Controller
         } else
             return back()->with('error', 'Delete didnt work.');
     }
+
+    // Display form
+    public function upload_file()
+    {
+        return view('upload-file');
+    }
+
+    // Submit
+    public function upload_file_submit(Request $request)
+    {
+        // Validate the file
+        $request->validate([
+            'myFile' => ['required', 'mimes:jpg,png']
+        ]);
+
+        // Get the name of the file
+        $fileName = $request->myFile->getClientOriginalName();
+
+        // Save the public path
+        $path = public_path('uploads');
+
+        // Save the file in the public/uploads folder
+        $request->myFile->move($path, $fileName);
+    }
 }

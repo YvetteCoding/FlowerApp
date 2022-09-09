@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\FlowerController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
+use App\Http\Controllers\FlowerController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,10 +17,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/flowers', [FlowerController::class, 'index']);
 Route::get('/flowers/details/{id}', [FlowerController::class, 'show']);
@@ -40,8 +38,31 @@ Route::get('/contact', function () {
     return view('contact');
 });
 
-// Login
-Route::get('/login', [UserController::class, 'loginForm']);
-Route::post('/login', [UserController::class, 'login']);
+Route::get('/', function () {
+    return view('home');
+})->name('homepage');
 
-Route::get('/logout', [UserController::class, 'logout']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__ . '/auth.php';
+
+
+// API Routes
+Route::get('/api/flowers', [ApiController::class, 'index']);
+Route::get('/api/flowers/lp={num1}&hp={num2}', [ApiController::class, 'fetchPrice']);
+
+Route::get('/read-api', function () {
+    $response = Http::withOptions(["verify" => false])->get('https://swapi.dev/api/people/?format=json');
+
+    dd($response->body());
+});
+
+// Upload a file :
+Route::get('/upload-file', [FlowerController::class, 'upload_file']);
+Route::post('/upload-file', [FlowerController::class, 'upload_file_submit']);
+
+// Use AJAX with Laravel
+Route::get('/ajax-form', [UserController::class, 'ajax_form']);
+Route::post('/get-users', [UserController::class, 'index'])->name('users');

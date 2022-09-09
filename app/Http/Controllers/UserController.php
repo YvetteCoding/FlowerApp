@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -32,15 +33,17 @@ class UserController extends Controller
     }
 
 
+    // Display form for AJAX
+    public function ajax_form()
+    {
+        return view('ajax-form');
+    }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $users = User::all();
+
+        return $users->toJson(JSON_PRETTY_PRINT);
     }
 
     /**
